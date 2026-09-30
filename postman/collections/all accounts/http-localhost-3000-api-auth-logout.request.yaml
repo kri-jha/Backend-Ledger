@@ -1,0 +1,13 @@
+$kind: http-request
+name: http://localhost:3000/api/auth/logout
+description: ""
+url: http://localhost:3000/api/auth/logout
+method: POST
+body:
+  type: json
+  content: ""
+auth:
+  type: bearer
+  credentials:
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+order: 3857444813349885

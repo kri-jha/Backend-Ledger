@@ -149,3 +149,88 @@ problem i face during this project - api testing using postman
 practise to solve the unreachable code -  jwt code user create hone ke baad or res.json created sucessfuly ke pahle dete hai 
 
 2 - route ka architecture samjhane me 
+create ledger and future me wo modeifed na ho 
+
+
+/**
+ * - Create a new transaction
+ * THE 10-STEP TRANSFER FLOW:
+     * 1. Validate request
+     * 2. Validate idempotency key
+     * 3. Check account status
+     * 4. Derive sender balance from ledger
+     * 5. Create transaction (PENDING)
+     * 6. Create DEBIT ledger entry
+     * 7. Create CREDIT ledger entry
+     * 8. Mark transaction COMPLETED
+     * 9. Commit MongoDB session
+     * 10. Send email notification
+ */
+const mongoose = require("mongoose")
+
+const transactionSchema = new mongoose.Schema({
+    fromAccount: {
+        type: "account",
+        ref: "account",
+        required: [true, "Transaction must be associated with a from account"],
+       index:true
+    },
+
+    toAccount:
+    {
+         type: "account",
+        ref: "account",
+        required: [true, "Transaction must be associated with a to  account"],
+       index:true
+    },
+
+    status: 
+    {
+        type:String,
+        enum:
+        {
+            values:["PENDING","COMPLETED", "FAILED","REVERSED"],
+            message: "Status can be either PENDING, COMPLETED, FAILED OR REVERSED",
+        },
+        default: "PENDING"
+        },
+
+        amount:
+        {
+            type: Number,
+            required: [true, "Amount is required for creating a transcartion"],
+
+        },
+
+        idempotencyKey: {
+            type: String,
+            required: [true , "Idempotency key is rewuired for creating a transcation"],
+            index: true,
+            unique: true,
+            trim:true,
+        }
+
+    } , {
+        timestamps:true
+    })
+
+    const transactionModel = mongoose.model("Transaction", transactionSchema)
+
+    module.exports = transactionModel // update the strucutre with small summary notes in this file 
+
+## MODULE_NOT_FOUND (transcation.controller)
+
+The application crashed because of a typo in the import path inside `SRC/routes/transcation.routes.js`. 
+The file was attempting to require `../controllers/transcation.controller` (notice the misspelled "transcation"), but the actual filename in the `controllers` directory is `transaction.controller.js`.
+Fixing the typo in the `require()` path to point to `../controllers/transaction.controller` resolved the error.
+
+## MODULE_NOT_FOUND (transaction.model)
+
+The application crashed again because of another naming mismatch, this time between `transaction.controller.js` and the `models` directory.
+The controller was correctly importing `../models/transaction.model`, but the model file was actually saved with a typo as `transcation.model.js`.
+To fix this, the file `SRC/models/transcation.model.js` was renamed to the correct spelling `transaction.model.js`.
+
+## MODULE_NOT_FOUND (email.service)
+
+The application crashed because `transaction.controller.js` (line 4) imports `../services/email.service`, but the actual file was saved as `email.services.js` (with an extra "s" in "services").
+To fix this, the file `SRC/services/email.services.js` was renamed to `email.service.js` to match the import path.

@@ -1,0 +1,21 @@
+$kind: http-request
+url: http://localhost:3000/api/transactions/system/initial-funds
+method: POST
+headers:
+  Authorization: Bearer {{auth_token}}
+body:
+  type: json
+  content: |-
+    {
+        "toAccount": "6abc1149cd853d06caa87b81",
+        "amount": 10000,
+        "idempotencyKey": "{{idempotencyKey}}"
+    }
+auth:
+  type: bearer
+  credentials:
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+scripts:
+  - type: beforeRequest
+    code: pm.environment.set("idempotencyKey", crypto.randomUUID());
+order: 1790754148713

@@ -1,0 +1,14 @@
+name: local-dev
+values:
+  - key: auth_token
+    value: ''
+    type: secret
+    enabled: true
+  - key: login_email
+    value: ''
+    type: secret
+    enabled: true
+  - key: login_password
+    value: ''
+    type: secret
+    enabled: true
